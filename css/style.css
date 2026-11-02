@@ -1,0 +1,149 @@
+:root {
+  --bg: #f6f3ee;
+  --surface: #ffffff;
+  --text: #1d1a16;
+  --muted: #655e54;
+  --line: #d8d0c4;
+  --him: #c96f12;
+  --accent: #c0262d;
+  --glow: #17a34a;
+  --clip: #1d63d6;
+  --on-accent: #ffffff;
+  --radius: 14px;
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #12100d;
+    --surface: #1c1915;
+    --text: #f2ede4;
+    --muted: #aaa194;
+    --line: #3b352d;
+    --him: #f2a65a;
+    --accent: #ff6b6b;
+    --glow: #4ade80;
+    --clip: #4f8fec;
+    --on-accent: #0b1220;
+  }
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+.top, main, footer {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  padding-top: 20px;
+  padding-bottom: 8px;
+}
+
+h1 { margin: 0; font-size: 1.75rem; letter-spacing: -0.01em; }
+.tag { margin: 2px 0 0; color: var(--muted); }
+
+.track { margin: 8px 0 16px; }
+#stage {
+  display: block;
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.bar {
+  height: 6px;
+  margin-top: 8px;
+  border-radius: 3px;
+  background: var(--line);
+  overflow: hidden;
+}
+.fill { height: 100%; width: 0; background: var(--clip); }
+
+.controls { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+button {
+  font: inherit;
+  font-weight: 600;
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+}
+button.primary { background: var(--clip); border-color: var(--clip); color: var(--on-accent); }
+button:disabled { opacity: 0.5; cursor: default; }
+button:focus-visible { outline: 3px solid var(--him); outline-offset: 2px; }
+
+.hint { color: var(--muted); font-size: 0.925rem; margin: 10px 0 0; }
+kbd {
+  font: 600 0.85em/1 system-ui, sans-serif;
+  padding: 2px 6px;
+  border: 1px solid var(--line);
+  border-bottom-width: 2px;
+  border-radius: 6px;
+  background: var(--surface);
+}
+
+.result {
+  margin: 0 0 24px;
+  padding: 16px 20px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.result h2 { margin: 0 0 4px; font-size: 1.5rem; }
+.result h2:focus { outline: none; }
+.result p { margin: 8px 0; }
+.result ul { margin: 8px 0; padding-left: 20px; }
+.fine { color: var(--muted); font-size: 0.875rem; }
+
+footer {
+  padding-bottom: 32px;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+footer a, .about a, .result a { color: var(--clip); }
+code { font-size: 0.9em; overflow-wrap: anywhere; }
+
+.about { max-width: 760px; margin: 0 auto; padding: 0 16px 40px; }
+.about h1 { margin-top: 24px; }
+.about h2 { margin-top: 28px; font-size: 1.2rem; }
+.about table { width: 100%; border-collapse: collapse; font-size: 0.925rem; }
+.about th, .about td { text-align: left; padding: 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.about blockquote, .result blockquote { margin: 8px 0; padding: 4px 12px; border-left: 3px solid var(--him); color: var(--muted); }
+
+.intro { margin: 12px 0 8px; max-width: 760px; }
+.intro p { margin: 0 0 8px; }
+.row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 0 0 8px; }
+.counter { margin: 0; font-weight: 600; min-height: 1.5em; }
+#sound { padding: 6px 12px; font-size: 0.875rem; }
+.guess button { min-width: 150px; padding: 14px 20px; font-size: 1.125rem; }
+.calls { list-style: none; padding-left: 0 !important; }
+.calls li { margin: 4px 0; }
+#truth[data-real="true"] { color: var(--him); }
+.result h3 { margin: 20px 0 4px; font-size: 1.1rem; }
+details { margin: 8px 0; color: var(--muted); font-size: 0.925rem; }
+summary { cursor: pointer; }
+#reveal { margin-top: 12px; }
+@media (hover: none) and (pointer: coarse) { .keys { display: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  * { scroll-behavior: auto !important; }
+}

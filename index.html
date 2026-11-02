@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Real or Robot? · Squeektoshi's runs or fakes</title>
+  <meta name="description" content="Eight-second clips of wheel passages: Squeektoshi's real recorded runs, or fakes. Call each one against a small trained model, and see what the proof can and cannot tell.">
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <h1>Real or Robot?</h1>
+      <p class="tag">Squeektoshi's real runs, or fakes? You and a small trained model both call it.</p>
+    </div>
+  </header>
+
+  <main>
+    <section class="intro" id="intro" aria-label="How to play">
+      <p>Each clip is 8 seconds of a wheel turning. You hear every magnet passage and watch the gaps between them. Some clips are Squeektoshi's own recorded runs. The rest are fakes made for this game: a motor, a person's hand, a smooth simulation, a replay loop, and a run rebuilt from counts. Call each one <b>hamster</b> or <b>robot</b> ("robot" means any fake). A small trained model calls them too.</p>
+      <div class="controls">
+        <button id="play4" class="primary" type="button" disabled>Play 4 clips · 1 minute</button>
+        <button id="play10" type="button" disabled>Play 10 clips · 3 minutes</button>
+      </div>
+      <p class="hint" id="status">Loading the clips…</p>
+    </section>
+
+    <section class="track" aria-label="The clip">
+      <div class="row">
+        <p class="counter" id="counter" aria-live="polite"></p>
+        <button id="sound" type="button" aria-pressed="true">Sound on</button>
+      </div>
+      <canvas id="stage" role="img" aria-label="A wheel turning through the clip, and a chart of the gaps between its passages. The reveal lists the gaps as numbers."></canvas>
+      <div class="bar" aria-hidden="true"><div class="fill" id="progress"></div></div>
+      <div id="game" hidden>
+        <div class="controls guess">
+          <button id="hamster" type="button">Hamster</button>
+          <button id="robot" type="button">Robot</button>
+        </div>
+        <p class="hint" id="prompt"></p>
+        <p class="hint keys">Keys: <kbd>H</kbd> hamster, <kbd>R</kbd> robot, <kbd>N</kbd> next clip. You can call it before the clip ends.</p>
+        <section class="result" id="reveal" hidden>
+          <h2 id="truth" tabindex="-1"></h2>
+          <ul class="calls">
+            <li id="yourCall"></li>
+            <li id="modelCall"></li>
+          </ul>
+          <p id="tell"></p>
+          <p class="fine" id="prov"></p>
+          <details>
+            <summary>The gaps, in milliseconds</summary>
+            <p id="gapList"></p>
+          </details>
+          <div class="controls">
+            <button id="next" class="primary" type="button">Next clip</button>
+            <button id="replay" type="button">Play it again</button>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section class="result" id="end" hidden>
+      <h2 id="final" tabindex="-1"></h2>
+      <p id="verdict"></p>
+      <ol id="recap"></ol>
+      <div class="controls">
+        <button id="again" class="primary" type="button">Play again</button>
+        <button id="other" type="button">Play 10 clips</button>
+        <button id="copy" type="button">Copy result</button>
+      </div>
+      <p class="fine" id="copied" aria-live="polite"></p>
+      <h3>What the proof proves, and where it stops</h3>
+      <p>Every real clip is Squeektoshi's own run, passage by passage, as his wheel's sensor recorded it. Every fake was made for this game. The motor and the hand are the telling ones: they would turn the real wheel, and the sensor would count them like any other passage. In the docs' words, "The sensor counts passages; it cannot tell why the wheel moved."</p>
+      <p>The docs are plain about it (<a href="https://docs.squeekchain.com/security/proof-limits/">Proof limits</a>):</p>
+      <blockquote>“Hamster proof of work” describes these recorded passages, not a way of proving animal identity or securing Ethereum consensus.</blockquote>
+      <p>And from <a href="https://docs.squeekchain.com/system/measurement/">Measuring wheel activity</a>: "A signing chip protects the key, not the truth of the data its host supplies."</p>
+      <p>A rhythm that looks wrong is worth a closer look, but it is not proof either way. The model was right on <span id="modelScore">89</span> of every 100 clips it had never seen, and it has no way to hear an exact repeat.</p>
+    </section>
+  </main>
+
+  <footer>
+    <p><b>The real clips</b> are cut from the Squeekchain API's <code>/v1/measurement/runs</code>: in the API's words, "evidence signed by the device's key, not work certified by SqueekCore". <b>The fakes</b> are generated in your browser.</p>
+    <p><b>Care first.</b> Squeektoshi runs when he chooses. Nothing here asks him to run, and nothing you do here reaches his wheel.</p>
+    <p><a href="about.html">How it works</a> · <a href="https://github.com/senti23/squeek-real-or-robot">Source code</a> · A community build for Squeekchain, not an official Squeekchain product.</p>
+  </footer>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

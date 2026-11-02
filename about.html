@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How Real or Robot? works</title>
+  <meta name="description" content="Where the real clips come from, how each fake is made, how the small trained model was trained and tested, and what the proof of Squeektoshi's work can and cannot tell.">
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <main class="about">
+    <p><a href="index.html">← Back to the game</a></p>
+    <h1>How Real or Robot? works</h1>
+    <p>Every clip is 8 seconds of wheel passages, played as clicks, a turning wheel and a chart of the gaps between passages. Some clips are Squeektoshi's own recorded runs. The others are fakes made for this game. You call each one, a small trained model calls it too, and the reveal shows what gave the clip away.</p>
+
+    <h2>The real clips</h2>
+    <p>They come from the Squeekchain API's <code>/v1/measurement/runs</code>, which the API describes as "The device's record of wheel passages, grouped into immutable run segments with exact passage times." It adds: "This is evidence signed by the device's key, not work certified by SqueekCore." The API labels every one of his run records <code>hardware</code>.</p>
+    <p>His runs were cut into 8-second stretches that start on a passage, hold at least 8 passages and have no pause longer than 2.5 seconds between passages. Cut end to end without overlapping, that gave 5,752 stretches over the nights of 26 to 30 October 2026. The game plays 80 of them, all from the nights of 29 and 30 October, spread across his paces.</p>
+
+    <h2>The fakes</h2>
+    <p>Each fake borrows the pace of one of his real clips, so speed alone gives nothing away. The API's provenance field can say <code>hardware</code>, <code>simulated</code>, <code>replay</code> or <code>derived</code>; the fakes play those parts. The docs list these values but do not define them, so the parts are this game's casting, not how Squeekchain would label such data.</p>
+    <table>
+      <thead><tr><th>Fake</th><th>How it is made</th><th>The part it plays</th></tr></thead>
+      <tbody>
+        <tr><td>A steady motor</td><td>Every gap the same, give or take about a millisecond.</td><td>A real wheel turned by something else. The sensor would count it: "The sensor counts passages; it cannot tell why the wheel moved."</td></tr>
+        <tr><td>A person turning the wheel by hand</td><td>A steady inner beat plus a hand delay that each gap corrects, so long and short gaps tend to alternate.</td><td>The same: a real wheel, a different cause.</td></tr>
+        <tr><td>A smooth simulation</td><td>The speed rises and falls in one clean wave.</td><td><code>simulated</code></td></tr>
+        <tr><td>A replay loop</td><td>Three or four of his real gaps, played over and over.</td><td><code>replay</code></td></tr>
+        <tr><td>Rebuilt from counts</td><td>His passage count in each 4-second half, spread out evenly.</td><td><code>derived</code></td></tr>
+      </tbody>
+    </table>
+    <p>To compare the fakes with his record, the game measured every 8-second stretch that starts on any of his passages: 53,604 of them, overlapping. The steadiest still wobbled by 2.3 ms (the spread of its gaps). None of them looped: in no stretch did more than two-thirds of the gaps match the gap a few places before. And never more than a quarter of neighbouring gaps matched to within a tenth of a millisecond. In 3 of every 4 stretches, neighbouring gaps moved together. The reveals use these numbers.</p>
+
+    <h2>The model</h2>
+    <p>It is a small trained model: a logistic regression that hears three things about a clip, namely how much the gaps vary, whether neighbouring gaps drift together or zig-zag, and how jagged the rhythm is, plus their pairwise products. It has no way to hear an exact repeat. It was trained on 3,169 of his stretches from the nights of 26 to 28 October and 3,170 fakes.</p>
+    <p>It was then tested on 1,200 clips it had never seen: 600 of his stretches from the nights of 29 and 30 October and 600 fakes. It was right on 89% of them.</p>
+    <table>
+      <thead><tr><th>Clip</th><th>Model right</th></tr></thead>
+      <tbody>
+        <tr><td>His real runs</td><td data-kind="real">93%</td></tr>
+        <tr><td>A steady motor</td><td data-kind="motor">100%</td></tr>
+        <tr><td>A person turning the wheel by hand</td><td data-kind="hand">78%</td></tr>
+        <tr><td>A smooth simulation</td><td data-kind="smooth">90%</td></tr>
+        <tr><td>A replay loop</td><td data-kind="loop">64%</td></tr>
+        <tr><td>Rebuilt from counts</td><td data-kind="steps">98%</td></tr>
+      </tbody>
+    </table>
+    <p>Each fake's figure comes from one draw of 120 clips, so it moves with the draw. Over 40 more draws the model stayed between 88% and 90% overall; hands ranged from 63% to 78% and loops from 56% to 73%.</p>
+    <p>So the way to beat it is to listen for loops and look for the zig-zag of a hand.</p>
+
+    <h2>What the proof proves, and where it stops</h2>
+    <p>Squeektoshi's wheel carries a magnet that passes a sensor once per turn. The docs say: "One accepted magnet passage records one work unit." They are just as clear about the limits:</p>
+    <blockquote>A work record says that a wheel-magnet passage was accepted under the configured sensor rules. It doesn't identify an animal, prove the wheel's direction, or establish what caused it to move. “Hamster proof of work” describes these recorded passages, not a way of proving animal identity or securing Ethereum consensus.</blockquote>
+    <p>(<a href="https://docs.squeekchain.com/security/proof-limits/">Proof limits</a>). And from <a href="https://docs.squeekchain.com/system/measurement/">Measuring wheel activity</a>: "Accepted work does not prove animal identity, direction, physical cause, calories, or health." and "A signing chip protects the key, not the truth of the data its host supplies."</p>
+    <p>This game is about that line. A rhythm that looks wrong is worth a closer look, but it is not proof either way, and the model is wrong sometimes too.</p>
+
+    <h2>Care first</h2>
+    <p>The docs say: "The care policy never forces or encourages running, so some periods produce no work and no blocks." Squeektoshi runs when he chooses. Nothing here asks him to run, and nothing you do here reaches his wheel.</p>
+
+    <p class="fine"><a href="https://github.com/senti23/squeek-real-or-robot">Source code</a> (MIT). A community build for Squeekchain, not an official Squeekchain product.</p>
+  </main>
+</body>
+</html>
